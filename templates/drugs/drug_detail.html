@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="w3-container w3-padding-32">
+    <h1 class="w3-text-teal">{{ drug.trade_name }}</h1>
+
+    <!-- Блок основної інформації -->
+    <div class="w3-card-4 w3-padding w3-margin-bottom">
+        <h2 class="w3-text-grey">Основна інформація</h2>
+        <table class="w3-table-all">
+            <tr class="w3-teal">
+                <th>Параметр</th>
+                <th>Значення</th>
+            </tr>
+            <tr>
+                <td>Міжнародна назва</td>
+                <td>{{ drug.international_name }}</td>
+            </tr>
+            <tr>
+                <td>Форма випуску</td>
+                <td>{{ drug.form }}</td>
+            </tr>
+            <tr>
+                <td>Склад</td>
+                <td>{{ drug.composition }}</td>
+            </tr>
+            <tr>
+                <td>Фармакотерапевтична група</td>
+                <td>{{ drug.pharmacotherapeutic_group }}</td>
+            </tr>
+            <tr>
+                <td>ATC код</td>
+                <td>{{ drug.atc_code }}</td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- Блок додаткової інформації -->
+    <div class="w3-card-4 w3-padding">
+        <h2 class="w3-text-grey">Додаткова інформація</h2>
+        <table class="w3-table-all">
+            <tr class="w3-teal">
+                <th>Параметр</th>
+                <th>Значення</th>
+            </tr>
+            <tr>
+                <td>Заявник</td>
+                <td>{{ drug.applicant.name }} ({{ drug.applicant.country }})</td>
+            </tr>
+            <tr>
+                <td>Виробники</td>
+                <td>
+                    {% for manufacturer in drug.manufacturers.all %}
+                    {{ manufacturer.name }} ({{ manufacturer.country }})<br>
+                    {% endfor %}
+                </td>
+            </tr>
+            {% if drug.shelflife %}
+            <tr>
+                <td>Термін придатності</td>
+                <td>{{ drug.shelflife.shelf_life }}</td>
+            </tr>
+            <tr>
+                <td>Біологічне походження</td>
+                <td>{{ drug.shelflife.bio_origin|yesno:"Так,Ні" }}</td>
+            </tr>
+            <tr>
+                <td>Інструкція</td>
+                <td>
+                    {% if drug.shelflife.manual_url %}
+                    <a href="{{ drug.shelflife.manual_url }}" target="_blank" class="w3-text-blue">Завантажити</a>
+                    {% else %}
+                    Не доступна
+                    {% endif %}
+                </td>
+            </tr>
+            {% endif %}
+        </table>
+    </div>
+</div>
+{% endblock %}

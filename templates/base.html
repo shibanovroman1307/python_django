@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        main {
+            flex: 1 0 auto;
+        }
+        footer {
+            flex-shrink: 0;
+        }
+        .message {
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+
+        .message.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        textarea {
+            width: 100%;
+            max-width: 400px;
+            height: 60px;
+            resize: both;
+    }
+    </style>
+</head>
+<body>
+    {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <div class="message {{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    <header>
+        <nav class="w3-bar w3-teal">
+            <a href="{% url 'index' %}" class="w3-bar-item w3-button">Головна</a>
+            <a href="{% url 'get_drugs' %}" class="w3-bar-item w3-button">Список препаратів</a>
+            <a href="{% url 'create_drug' %}" class="w3-bar-item w3-button">Додати препарат</a>
+            <a href="{% url 'admin:index' %}" class="w3-bar-item w3-button">Адмін панель</a>
+        </nav>
+    </header>
+
+    <main>
+        {% block content %}
+        <div class="w3-container w3-padding-64">
+            <div class="w3-card-4 w3-padding w3-margin">
+                <h1 class="w3-text-teal">Реєстр лікарських засобів</h1>
+                <p class="w3-padding-16">Ласкаво просимо до системи обліку лікарських засобів.</p>
+
+                <div class="w3-panel w3-light-grey w3-padding-16">
+                    <h2 class="w3-text-dark-grey">Можливості системи:</h2>
+                    <ul class="w3-ul">
+                        <li class="w3-hover-light-blue">Перегляд списку препаратів</li>
+                        <li class="w3-hover-light-blue">Додавання нових препаратів</li>
+                        <li class="w3-hover-light-blue">Редагування інформації</li>
+                        <li class="w3-hover-light-blue">Адміністрування бази даних</li>
+                    </ul>
+                </div>
+
+                <div class="w3-panel w3-pale-yellow w3-padding-16">
+                    <h2 class="w3-text-dark-grey">Інструкція по запуску проєкту:</h2>
+                    <ol class="w3-ul">
+                        <li>1. Перевірте наявність Python: <code>python --version</code></li>
+                        <li>2. Встановіть віртуальне середовище: <code>python -m venv .venv</code></li>
+                        <li>3. Активуйте віртуальне середовище:
+                            <br>- Windows: <code>.venv\Scripts\activate</code>
+                            <br>- Linux/Mac: <code>source .venv/bin/activate</code>
+                        </li>
+                        <li>4. Встановіть залежності: <code>pip install -r requirements.txt</code></li>
+                        <li>5. Виконайте міграції: <code>python manage.py migrate</code></li>
+                        <li>6. Створіть суперкористувача: <code>python manage.py createsuperuser</code></li>
+                        <li>7. Запустіть сервер: <code>python manage.py runserver</code></li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+        {% endblock %}
+    </main>
+
+    <footer class="w3-container w3-teal w3-center w3-padding">
+        <p>&copy; 2024 Реєстр лікарських засобів</p>
+    </footer>
+</body>
+</html>

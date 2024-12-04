@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="w3-container w3-padding-32">
+        <h1 class="w3-text-teal">Список лікарських засобів</h1>
+        
+        <!-- Пошукова форма -->
+        <form method="get" class="w3-container w3-padding-16">
+            <div class="w3-row-padding">
+                <div class="w3-twothird">
+                    <input type="text" name="search" value="{{ search_query }}" 
+                           class="w3-input w3-border" 
+                           placeholder="Пошук препаратів...">
+                </div>
+                <div class="w3-third">
+                    <button type="submit" class="w3-button w3-teal w3-block">Пошук</button>
+                </div>
+            </div>
+        </form>
+
+        <div class="w3-responsive">
+            <table class="w3-table-all w3-hoverable">
+                <thead>
+                    <tr class="w3-teal">
+                        <th>Назва</th>
+                        <th>Форма випуску</th>
+                        <th>Виробник</th>
+                        <th>Дія</th>
+                    </tr>
+                </thead>
+                {% for drug in drugs %}
+                    <tr>
+                        <td>{{ drug.trade_name }}</td>
+                        <td>{{ drug.form }}</td>
+                        <td>{{ drug.manufacturer }}</td>
+                        <td>
+                            <a href="{% url 'update_drug' drug.id %}" class="w3-button w3-small">
+                                <i class="fa fa-edit"></i>
+                            </a>
+                            <a href="{% url 'get_drug' drug.id %}" class="w3-button w3-small">
+                                <i class="fa fa-info-circle"></i>
+                            </a>
+                            <form action="{% url 'delete_drug' drug.id %}" method="POST" style="display:inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="w3-button w3-small" onclick="return confirm('Ви впевнені, що хочете видалити?');">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+
+{% if page_obj.has_other_pages %}
+<div class="w3-bar w3-center w3-padding-16">
+    {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}&search={{ search_query }}" 
+           class="w3-button w3-teal">&laquo; Попередня</a>
+    {% endif %}
+
+    {% if page_obj.number|add:'-4' > 1 %}
+        <a href="?page=1&search={{ search_query }}" class="w3-button w3-hover-teal">1</a>
+        <span class="w3-button">...</span>
+    {% endif %}
+
+    {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number|add:'-3' <= num and page_obj.number|add:'3' >= num %}
+            {% if page_obj.number == num %}
+                <span class="w3-button w3-teal w3-hover-teal">{{ num }}</span>
+            {% else %}
+                <a href="?page={{ num }}&search={{ search_query }}" 
+                   class="w3-button w3-hover-teal">{{ num }}</a>
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+
+    {% if page_obj.number|add:'4' < page_obj.paginator.num_pages %}
+        <span class="w3-button">...</span>
+        <a href="?page={{ page_obj.paginator.num_pages }}&search={{ search_query }}" 
+           class="w3-button w3-hover-teal">{{ page_obj.paginator.num_pages }}</a>
+    {% endif %}
+
+    {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}&search={{ search_query }}" 
+           class="w3-button w3-teal">Наступна &raquo;</a>
+    {% endif %}
+</div>
+{% endif %}
+{% if page_obj.has_other_pages %}
+<div class="w3-bar w3-center w3-padding-16">
+    <!-- існуюча пагінація -->
+    
+    <!-- форма для введення номера сторінки -->
+    <div class="w3-padding-16">
+        <form method="get" class="w3-center" style="max-width: 300px; margin: auto;">
+            <div class="w3-row">
+                <div class="w3-twothird">
+                    <input type="number" name="page" min="1" max="{{ page_obj.paginator.num_pages }}" 
+                           class="w3-input w3-border" placeholder="Номер сторінки">
+                    {% if search_query %}
+                        <input type="hidden" name="search" value="{{ search_query }}">
+                    {% endif %}
+                </div>
+                <div class="w3-third">
+                    <button type="submit" class="w3-button w3-teal w3-block">Перейти</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endif %}
+    </div>
+{% endblock %}

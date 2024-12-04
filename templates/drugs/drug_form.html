@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="w3-container w3-padding-32">
+    <h1 class="w3-text-teal">
+        {% if drug.pk %}Редагування: {{ drug.trade_name }}{% else %}Додавання препарату{% endif %}
+    </h1>
+
+    <form method="post" class="w3-card-4 w3-padding w3-light-grey" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="w3-section">
+            <h3 class="w3-text-teal">Основна інформація</h3>
+            {{ drug_form.as_p }}
+        </div>
+
+        <div class="w3-section">
+            <h3 class="w3-text-teal">Додаткова інформація</h3>
+            {{ shelf_life_formset.management_form }}
+            {% for form in shelf_life_formset %}
+                <div class="w3-card w3-padding w3-margin-bottom">
+                    {{ form.as_p }}
+                </div>
+            {% endfor %}
+        </div>
+
+        <button type="submit" class="w3-button w3-teal">Зберегти</button>
+        <a href="{% url 'get_drugs' %}" class="w3-button w3-grey">Скасувати</a>
+    </form>
+</div>
+{% endblock %}
